@@ -1,0 +1,25 @@
+import re
+
+
+def load_file(filename):
+    with open("./chat_logs/"+filename, "r") as file:
+        text = file.read()
+        # replace newlines in messages
+        chat = re.sub("\n[^\[]", " ", text).split("\n")
+        # remove sticker, image and empty messages
+        filter_stickers = list(
+            filter(lambda line: "sticker omitted" not in line, chat))
+        filter_images = list(
+            filter(lambda line: "image omitted" not in line, filter_stickers))
+        filter_empty = list(filter(lambda line: line != "", filter_images))
+        return filter_empty
+
+
+def split_user_messages(chat):
+    user1 = (chat[0].split("] ", 1)[1]).split(":", 1)[0]
+    user1_messages = list(
+        filter(lambda line: ("] " + user1 + ":") in line, chat))
+    user2_messages = list(filter(lambda line: (
+        "] " + user1 + ":") not in line, chat))
+    user2 = (user2_messages[0].split("] ", 1)[1]).split(":", 1)[0]
+    return (user1, user2, user1_messages, user2_messages)
