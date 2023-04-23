@@ -22,7 +22,6 @@ def plot_messages_date(user1, user2, u1_datedict, u2_datedict):
     plt.plot(u1_dates, u1_counter)
     plt.plot(u2_dates, u2_counter)
     plt.legend([user1, user2])
-
     plt.gca().xaxis.set_major_formatter(date_form)
 
     plt.savefig("output/mess_per_date.png", dpi=output_dpi)
@@ -32,12 +31,10 @@ def plot_messages_date_total(user1, user2, u1_datedict, u2_datedict):
     plt.clf()
 
     merged_dict = dict(Counter(u1_datedict) + Counter(u2_datedict))
-
     dict_sorted = sorted(merged_dict.items())
     dates, counter = zip(*dict_sorted)
 
     plt.plot(dates, counter)
-
     plt.gca().xaxis.set_major_formatter(date_form)
 
     plt.savefig("output/mess_per_date_total.png", dpi=output_dpi)
@@ -58,7 +55,6 @@ def plot_messages_weekday(user1, user2, daycount1, daycount2):
     fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
     ax.plot(norm_days, count1)
     ax.fill_between(norm_days, count1, label="_nolegend_")
-
     ax.plot(norm_days, count2)
     ax.fill_between(norm_days, count2, label="_nolegend_")
     ax.set_xticks(
@@ -98,7 +94,6 @@ def plot_messages_month(user1, user2, monthcount1, monthcount2):
     fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
     ax.plot(norm_months, count1)
     ax.fill_between(norm_months, count1, label="_nolegend_")
-
     ax.plot(norm_months, count2)
     ax.fill_between(norm_months, count2, label="_nolegend_")
     ax.set_xticks(
@@ -145,11 +140,9 @@ def plot_most_common_emoji(user, emojicount):
 
     emojis, count = zip(*emojicount)
     xticks = range(len(emojis))
-
-    plt.bar(xticks, count)
-
     prop = FontProperties(fname="/System/Library/Fonts/Apple Color Emoji.ttc", size=18)
 
+    plt.bar(xticks, count)
     plt.xticks(xticks, emojis, fontproperties=prop)
 
     plt.savefig("output/" + user + "_mc_emoji.png", dpi=output_dpi)

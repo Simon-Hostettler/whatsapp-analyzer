@@ -83,7 +83,7 @@ def messages_per_month(messages):
     month_dict = dict(
         collections.Counter(list(map(lambda mess: get_date(mess).month - 1, messages)))
     )
-    for i in range(0, 12):
-        if not i in month_dict.keys():
-            month_dict[i] = 0
+    month_dict = {
+        i: 0 if i not in month_dict.keys() else month_dict[i] for i in range(0, 12)
+    }
     return month_dict
