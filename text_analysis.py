@@ -1,6 +1,7 @@
 import collections
 import datetime
 import emoji
+import string
 
 
 def most_common_emojis(messages, n=5):
@@ -11,6 +12,24 @@ def most_common_emojis(messages, n=5):
 
     emojis = "".join(list(map(emojis_per_mess, messages)))
     return collections.Counter(emojis).most_common(n)
+
+
+def most_common_words(messages, n=10):
+    words = sum(
+        list(
+            map(
+                lambda mess: remove_punctuation(text_only(mess)).lower().split(" "),
+                messages,
+            )
+        ),
+        [],
+    )
+    drop_empty = list(filter(lambda s: s != "", words))
+    return collections.Counter(drop_empty).most_common(n)
+
+
+def remove_punctuation(message):
+    return message.translate(str.maketrans("", "", string.punctuation))
 
 
 def num_messages(messages):
