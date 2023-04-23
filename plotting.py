@@ -49,6 +49,17 @@ def plot_message_percentage(user1, user2, u1count, u2count):
     plt.savefig("output/mpu_pie_chart", dpi=output_dpi)
 
 
+def plot_first_message_percentage(count_dict):
+    plt.clf()
+
+    fig, ax = plt.subplots()
+    users = count_dict.keys()
+    count = count_dict.values()
+    ax.pie(count, labels=users, autopct="%1.1f%%")
+
+    plt.savefig("output/fm_pie_chart", dpi=output_dpi)
+
+
 def plot_messages_weekday(user1, user2, daycount1, daycount2):
     plt.clf()
 

@@ -45,7 +45,13 @@ if __name__ == "__main__":
     u2_daycount = messages_per_weekday(u2_messages)
     plot_messages_weekday(user1, user2, u1_daycount, u2_daycount)
 
+    # plot messages per month
     u1_monthcount = messages_per_month(u1_messages)
     u2_monthcount = messages_per_month(u2_messages)
     print(u1_monthcount)
     plot_messages_month(user1, user2, u1_monthcount, u2_monthcount)
+
+    # plot pie chart of percentage of who sent first message
+    count_dict = first_message_per_day(u1_messages, u2_messages)
+    print(count_dict)
+    plot_first_message_percentage(count_dict)

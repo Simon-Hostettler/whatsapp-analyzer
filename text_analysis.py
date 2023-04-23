@@ -74,6 +74,29 @@ def get_time(message):
     return datetime.time(hour=time[0], minute=time[1], second=time[2])
 
 
+def first_message_per_day(u1_messages, u2_messages):
+    messages = u1_messages + u2_messages
+    messages_by_day = {}
+    for m in messages:
+        date = get_date(m)
+        if date not in messages_by_day.keys():
+            messages_by_day[date] = [m]
+        else:
+            messages_by_day[date].append(m)
+    messages_by_day = list(
+        map(
+            lambda ml: sorted(ml, key=(lambda x: get_time(x))),
+            messages_by_day.values(),
+        )
+    )
+    wrote_first = list(map(lambda ml: get_user(ml[0]), messages_by_day))
+    return dict(collections.Counter(wrote_first))
+
+
+def get_user(message):
+    return (message.split("] ", 1)[1]).split(":", 1)[0]
+
+
 def messages_per_date(messages):
     return dict(collections.Counter(list(map(get_date, messages))))
 
