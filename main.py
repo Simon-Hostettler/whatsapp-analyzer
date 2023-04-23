@@ -1,19 +1,17 @@
 import matplotlib, mplcairo
+import matplotlib.pyplot as plt
 import seaborn as sns
 from loading import *
 from text_analysis import *
 from plotting import *
+from plt_stylesheet import stylesheet
+
 
 if __name__ == "__main__":
     # change backend to render emojis correctly
     matplotlib.use("module://mplcairo.macosx")
 
-    # change plotting theme
-    sns.set_theme(
-        palette=sns.color_palette("Spectral"),
-        context={"font.weight": "bold"},
-        style="dark",
-    )
+    plt.rcParams.update(stylesheet)
 
     # load chat
     chat = load_file("nora.txt")

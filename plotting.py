@@ -7,6 +7,7 @@ from collections import Counter
 title_padding = 15
 title_weight = "bold"
 output_dpi = 350
+date_form = DateFormatter("%y-%m")
 
 
 def plot_messages_date(user1, user2, u1_datedict, u2_datedict):
@@ -22,6 +23,8 @@ def plot_messages_date(user1, user2, u1_datedict, u2_datedict):
     plt.plot(u2_dates, u2_counter)
     plt.legend([user1, user2])
 
+    plt.gca().xaxis.set_major_formatter(date_form)
+
     plt.savefig("output/mess_per_date.png", dpi=output_dpi)
 
 
@@ -35,6 +38,8 @@ def plot_messages_date_total(user1, user2, u1_datedict, u2_datedict):
 
     plt.title("Messages per Day", weight=title_weight, pad=title_padding)
     plt.plot(dates, counter)
+
+    plt.gca().xaxis.set_major_formatter(date_form)
 
     plt.savefig("output/mess_per_date_total.png", dpi=output_dpi)
 
