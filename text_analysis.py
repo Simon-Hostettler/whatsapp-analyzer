@@ -5,16 +5,19 @@ import string
 
 
 def most_common_emojis(messages, n=5):
+    # string containing only the emojis in the message
     def emojis_per_mess(message):
         return "".join(
             list(map(lambda dict: dict["emoji"][0], emoji.emoji_list(message)))
         )
 
+    # string containing all emojis in the messages
     emojis = "".join(list(map(emojis_per_mess, messages)))
     return collections.Counter(emojis).most_common(n)
 
 
 def most_common_words(messages, n=10):
+    # remove metadata and punctuation, then split into words by whitespace
     words = sum(
         list(
             map(
@@ -24,6 +27,8 @@ def most_common_words(messages, n=10):
         ),
         [],
     )
+
+    # filter empty words
     drop_empty = list(filter(lambda s: s != "", words))
     return collections.Counter(drop_empty).most_common(n)
 
@@ -74,15 +79,19 @@ def messages_per_date(messages):
 
 
 def messages_per_weekday(messages):
-    return dict(
+    day_dict = dict(
         collections.Counter(list(map(lambda mess: get_date(mess).weekday(), messages)))
     )
+    # fill in missing days in dictionary
+    day_dict = {i: 0 if i not in day_dict.keys() else day_dict[i] for i in range(0, 7)}
+    return day_dict
 
 
 def messages_per_month(messages):
     month_dict = dict(
         collections.Counter(list(map(lambda mess: get_date(mess).month - 1, messages)))
     )
+    # fill in missing months in dictionary
     month_dict = {
         i: 0 if i not in month_dict.keys() else month_dict[i] for i in range(0, 12)
     }
