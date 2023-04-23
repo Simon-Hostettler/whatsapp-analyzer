@@ -38,3 +38,13 @@ if __name__ == "__main__":
     u2_wordcount = most_common_words(u2_messages)
     plot_most_common_words(user1, u1_wordcount)
     plot_most_common_words(user2, u2_wordcount)
+
+    # plot messages per weekday
+    u1_daycount = messages_per_weekday(u1_messages)
+    u2_daycount = messages_per_weekday(u2_messages)
+    plot_messages_weekday(user1, user2, u1_daycount, u2_daycount)
+
+    u1_monthcount = messages_per_month(u1_messages)
+    u2_monthcount = messages_per_month(u2_messages)
+    print(u1_monthcount)
+    plot_messages_month(user1, user2, u1_monthcount, u2_monthcount)

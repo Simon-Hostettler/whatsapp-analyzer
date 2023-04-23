@@ -71,3 +71,19 @@ def get_time(message):
 
 def messages_per_date(messages):
     return dict(collections.Counter(list(map(get_date, messages))))
+
+
+def messages_per_weekday(messages):
+    return dict(
+        collections.Counter(list(map(lambda mess: get_date(mess).weekday(), messages)))
+    )
+
+
+def messages_per_month(messages):
+    month_dict = dict(
+        collections.Counter(list(map(lambda mess: get_date(mess).month - 1, messages)))
+    )
+    for i in range(0, 12):
+        if not i in month_dict.keys():
+            month_dict[i] = 0
+    return month_dict
