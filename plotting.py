@@ -44,11 +44,7 @@ def plot_message_percentage(user1, user2, u1count, u2count):
     plt.clf()
 
     fig, ax = plt.subplots()
-    _, _, autotexts = ax.pie(
-        [u1count, u2count], labels=[user1, user2], autopct="%1.1f%%"
-    )
-    for autotext in autotexts:
-        autotext.set_color("#2e2e36")
+    ax.pie([u1count, u2count], labels=[user1, user2], autopct="%1.1f%%")
 
     plt.savefig("output/mpu_pie_chart", dpi=output_dpi)
 

@@ -7,7 +7,7 @@ stylesheet = {
     "axes.prop_cycle": cycler(
         color=[
             "#8dd3c7",
-            "#feffb3",
+            "#f59356",
             "#bfbbd9",
             "#fa8174",
             "#81b1d2",
