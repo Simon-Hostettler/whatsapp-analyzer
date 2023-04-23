@@ -40,6 +40,19 @@ def plot_messages_date_total(user1, user2, u1_datedict, u2_datedict):
     plt.savefig("output/mess_per_date_total.png", dpi=output_dpi)
 
 
+def plot_message_percentage(user1, user2, u1count, u2count):
+    plt.clf()
+
+    fig, ax = plt.subplots()
+    _, _, autotexts = ax.pie(
+        [u1count, u2count], labels=[user1, user2], autopct="%1.1f%%"
+    )
+    for autotext in autotexts:
+        autotext.set_color("#2e2e36")
+
+    plt.savefig("output/mpu_pie_chart", dpi=output_dpi)
+
+
 def plot_messages_weekday(user1, user2, daycount1, daycount2):
     plt.clf()
 

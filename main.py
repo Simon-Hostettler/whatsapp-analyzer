@@ -23,9 +23,10 @@ if __name__ == "__main__":
     plot_most_common_emoji(user1, u1_emojicount)
     plot_most_common_emoji(user2, u2_emojicount)
 
-    # number of messages and average message length per user
-    print(user1, num_messages(u1_messages), avg_message_wc(u1_messages))
-    print(user2, num_messages(u2_messages), avg_message_wc(u2_messages))
+    # plot pie chart of percentage of messages per user
+    u1_mess_count = num_messages(u1_messages)
+    u2_mess_count = num_messages(u2_messages)
+    plot_message_percentage(user1, user2, u1_mess_count, u2_mess_count)
 
     # plot messages over time
     u1_datedict = messages_per_date(u1_messages)
