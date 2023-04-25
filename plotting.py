@@ -60,6 +60,35 @@ def plot_first_message_percentage(count_dict):
     plt.savefig("output/fm_pie_chart", dpi=output_dpi)
 
 
+def plot_messages_hour(user1, user2, hourcount1, hourcount2):
+    plt.clf()
+
+    hourcount1[24] = hourcount1[0]
+    hourcount2[24] = hourcount2[0]
+    hourcount1 = sorted(hourcount1.items())
+    hourcount2 = sorted(hourcount2.items())
+    _, count1 = zip(*hourcount1)
+    _, count2 = zip(*hourcount2)
+
+    norm_hours = list(map(lambda d: -(d / 24.0 * 2.0 * np.pi), range(0, 25)))
+
+    fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
+
+    ax.plot(norm_hours, count1)
+    ax.fill_between(norm_hours, count1, label="_nolegend_")
+    ax.plot(norm_hours, count2)
+    ax.fill_between(norm_hours, count2, label="_nolegend_")
+    ax.set_xticks(norm_hours, list(map(lambda h: str(h) + ":00", range(0, 24))) + [""])
+    ax.tick_params(axis="x", pad=20)
+    ax.set_rticks([])
+    ax.set_axisbelow(False)
+
+    plt.legend([user1, user2], loc="upper left")
+    plt.tight_layout()
+
+    plt.savefig("output/messages_hour", dpi=output_dpi)
+
+
 def plot_messages_weekday(user1, user2, daycount1, daycount2):
     plt.clf()
 
@@ -92,6 +121,7 @@ def plot_messages_weekday(user1, user2, daycount1, daycount2):
     )
     ax.tick_params(axis="x", pad=20)
     ax.set_rticks([])
+    ax.set_axisbelow(False)
 
     plt.legend([user1, user2], loc="upper left")
     plt.tight_layout()
@@ -136,6 +166,7 @@ def plot_messages_month(user1, user2, monthcount1, monthcount2):
     )
     ax.tick_params(axis="x", pad=20)
     ax.set_rticks([])
+    ax.set_axisbelow(False)
 
     plt.legend([user1, user2], loc="upper left")
     plt.tight_layout()

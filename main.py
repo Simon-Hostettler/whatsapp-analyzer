@@ -14,7 +14,7 @@ if __name__ == "__main__":
     plt.rcParams.update(stylesheet)
 
     # load chat
-    chat = load_file("nora.txt")
+    chat = load_file("chat2.txt")
     user1, user2, u1_messages, u2_messages = split_user_messages(chat)
 
     # plot most used emojis
@@ -55,3 +55,7 @@ if __name__ == "__main__":
     count_dict = first_message_per_day(u1_messages, u2_messages)
     print(count_dict)
     plot_first_message_percentage(count_dict)
+
+    u1_hourcount = messages_per_hour(u1_messages)
+    u2_hourcount = messages_per_hour(u2_messages)
+    plot_messages_hour(user1, user2, u1_hourcount, u2_hourcount)

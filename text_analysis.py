@@ -74,21 +74,28 @@ def get_time(message):
     return datetime.time(hour=time[0], minute=time[1], second=time[2])
 
 
+def get_hour(message):
+    return list(map(int, (message.split("]")[0].split(",")[1]).split(":")))[0]
+
+
 def first_message_per_day(u1_messages, u2_messages):
     messages = u1_messages + u2_messages
     messages_by_day = {}
+    # group messages by date
     for m in messages:
         date = get_date(m)
         if date not in messages_by_day.keys():
             messages_by_day[date] = [m]
         else:
             messages_by_day[date].append(m)
+    # sort by time of day
     messages_by_day = list(
         map(
             lambda ml: sorted(ml, key=(lambda x: get_time(x))),
             messages_by_day.values(),
         )
     )
+    # get username of first message
     wrote_first = list(map(lambda ml: get_user(ml[0]), messages_by_day))
     return dict(collections.Counter(wrote_first))
 
@@ -99,6 +106,16 @@ def get_user(message):
 
 def messages_per_date(messages):
     return dict(collections.Counter(list(map(get_date, messages))))
+
+
+def messages_per_hour(messages):
+    hour_dict = dict(
+        collections.Counter(list(map(lambda mess: get_hour(mess), messages)))
+    )
+    hour_dict = {
+        i: 0 if i not in hour_dict.keys() else hour_dict[i] for i in range(0, 24)
+    }
+    return hour_dict
 
 
 def messages_per_weekday(messages):
