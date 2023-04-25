@@ -6,12 +6,13 @@ def load_file(filename):
         text = file.read()
         # replace newlines in messages
         chat = re.sub("\n[^\[]", " ", text).split("\n")
-        # remove sticker, image and empty messages
+        # remove sticker, image, voice call and empty messages
         filter_stickers = list(filter(lambda line: "sticker omitted" not in line, chat))
         filter_images = list(
             filter(lambda line: "image omitted" not in line, filter_stickers)
         )
-        filter_empty = list(filter(lambda line: line != "", filter_images))
+        filter_vc = list(filter(lambda line: "Missed voice call" not in line, chat))
+        filter_empty = list(filter(lambda line: line != "", filter_vc))
         return filter_empty
 
 
