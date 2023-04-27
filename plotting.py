@@ -21,7 +21,6 @@ def plot_messages_date(user1, user2, u1_datedict, u2_datedict):
 
     plt.plot(u1_dates, u1_counter)
     plt.plot(u2_dates, u2_counter)
-    plt.legend([user1, user2])
     plt.gca().xaxis.set_major_formatter(date_form)
 
     plt.savefig("output/mess_per_date.png", dpi=output_dpi)
@@ -83,7 +82,6 @@ def plot_messages_hour(user1, user2, hourcount1, hourcount2):
     ax.set_rticks([])
     ax.set_axisbelow(False)
 
-    plt.legend([user1, user2], loc="upper left")
     plt.tight_layout()
 
     plt.savefig("output/messages_hour", dpi=output_dpi)
@@ -123,7 +121,6 @@ def plot_messages_weekday(user1, user2, daycount1, daycount2):
     ax.set_rticks([])
     ax.set_axisbelow(False)
 
-    plt.legend([user1, user2], loc="upper left")
     plt.tight_layout()
 
     plt.savefig("output/messages_weekday", dpi=output_dpi)
@@ -168,32 +165,32 @@ def plot_messages_month(user1, user2, monthcount1, monthcount2):
     ax.set_rticks([])
     ax.set_axisbelow(False)
 
-    plt.legend([user1, user2], loc="upper left")
     plt.tight_layout()
 
     plt.savefig("output/messages_month", dpi=output_dpi)
 
 
-def plot_most_common_words(user, wordcount):
+def plot_most_common_words(user, wordcount, color):
     plt.clf()
 
     words, count = zip(*wordcount)
     xticks = range(len(words))
+    prop = FontProperties(size=11)
 
-    plt.bar(xticks, count)
-    plt.xticks(xticks, words)
+    plt.bar(xticks, count, color=color)
+    plt.xticks(xticks, words, fontproperties=prop)
 
     plt.savefig("output/" + user + "_mc_words.png", dpi=output_dpi)
 
 
-def plot_most_common_emoji(user, emojicount):
+def plot_most_common_emoji(user, emojicount, color):
     plt.clf()
 
     emojis, count = zip(*emojicount)
     xticks = range(len(emojis))
-    prop = FontProperties(fname="/System/Library/Fonts/Apple Color Emoji.ttc", size=18)
+    prop = FontProperties(fname="/System/Library/Fonts/Apple Color Emoji.ttc", size=25)
 
-    plt.bar(xticks, count)
+    plt.bar(xticks, count, color=color)
     plt.xticks(xticks, emojis, fontproperties=prop)
 
     plt.savefig("output/" + user + "_mc_emoji.png", dpi=output_dpi)
