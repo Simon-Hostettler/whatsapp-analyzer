@@ -43,7 +43,7 @@ def plot_message_percentage(user1, user2, u1count, u2count):
     plt.clf()
 
     fig, ax = plt.subplots()
-    ax.pie([u1count, u2count], labels=[user1, user2], autopct="%1.1f%%")
+    ax.pie([u1count, u2count], labels=None, autopct="%1.1f%%")
 
     plt.savefig("output/mpu_pie_chart", dpi=output_dpi)
 
@@ -54,7 +54,7 @@ def plot_first_message_percentage(count_dict):
     fig, ax = plt.subplots()
     users = count_dict.keys()
     count = count_dict.values()
-    ax.pie(count, labels=users, autopct="%1.1f%%")
+    ax.pie(count, labels=None, autopct="%1.1f%%")
 
     plt.savefig("output/fm_pie_chart", dpi=output_dpi)
 
