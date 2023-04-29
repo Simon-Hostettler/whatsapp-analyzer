@@ -12,8 +12,10 @@ if __name__ == "__main__":
 
     plt.rcParams.update(stylesheet)
 
+    create_folders_if_missing()
+
     # load chat
-    chat = load_file("chat2.txt")
+    chat = load_file("chat.txt")
     user1, user2, u1_messages, u2_messages = split_user_messages(chat)
 
     create_poster(user1, user2, u1_messages, u2_messages)

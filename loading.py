@@ -1,4 +1,11 @@
 import re
+import os
+
+
+def create_folders_if_missing():
+    for folder in ["/output", "/chat_logs"]:
+        if not os.path.exists(os.getcwd() + folder):
+            os.makedirs(os.getcwd() + folder)
 
 
 def load_file(filename):
