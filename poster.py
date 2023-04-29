@@ -6,23 +6,47 @@ title_font = ImageFont.truetype("fonts/helvetica.ttf", size=200)
 subtitle_font = ImageFont.truetype("fonts/helvetica.ttf", size=80)
 info_font = ImageFont.truetype("fonts/helvetica.ttf", size=50)
 
+width = 2560
+height = 5760
+
+side_padding = 400
+
+x_scale = 1000
+y_scale = 750
+
+scaled_res = (x_scale, y_scale)
+
+y_offset = 100
+
+img_offs_left = (width - 2 * x_scale) // 2
+img_offs_right = int(1.5 * img_offs_left) + x_scale
+
 
 def create_poster(user1, user2, u1_messages, u2_messages):
     prepare_figs(user1, user2, u1_messages, u2_messages)
 
-    poster = Image.new("RGB", (2560, 5760), color="#2e2e36")
+    poster = Image.new("RGB", (width, height), color="#2e2e36")
     pdraw = ImageDraw.Draw(poster)
 
+    cur_y = 250
+
     # draw name title
-    pdraw.text((400, 250), font=title_font, fill="#8dd3c7", text=user1, stroke_width=4)
+    pdraw.text(
+        (side_padding, cur_y),
+        font=title_font,
+        fill="#8dd3c7",
+        text=user1,
+        stroke_width=4,
+    )
     pdraw.text(
         (
-            2160
+            width
+            - side_padding
             - pdraw.textlength(
                 text=user2,
                 font=title_font,
             ),
-            250,
+            cur_y,
         ),
         font=title_font,
         fill="#f59356",
@@ -30,145 +54,193 @@ def create_poster(user1, user2, u1_messages, u2_messages):
         stroke_width=4,
     )
 
+    cur_y += 3 * y_offset
     # draw total messages information
     mpu1 = len(u1_messages)
     mpu2 = len(u2_messages)
 
     pdraw.text(
-        (400, 550), font=info_font, stroke_width=2, text=f"Total messages: {mpu1}"
+        (side_padding, cur_y),
+        font=info_font,
+        stroke_width=2,
+        text=f"Total messages: {mpu1}",
     )
     pdraw.text(
         (
-            2160 - pdraw.textlength(text=f"Total messages: {mpu2}", font=info_font),
-            550,
+            width
+            - side_padding
+            - pdraw.textlength(text=f"Total messages: {mpu2}", font=info_font),
+            cur_y,
         ),
         font=info_font,
         stroke_width=2,
         text=f"Total messages: {mpu2}",
     )
 
+    cur_y += int(1.5 * y_offset)
     # draw average message length information
     avgl1 = avg_message_wc(u1_messages)
     avgl2 = avg_message_wc(u2_messages)
 
     pdraw.text(
-        (400, 700),
+        (side_padding, cur_y),
         font=info_font,
         stroke_width=2,
         text="Avg message length: {:.1f}".format(avgl1),
     )
     pdraw.text(
         (
-            2160
+            width
+            - side_padding
             - pdraw.textlength(
                 text="Avg message length: {:.1f}".format(avgl2), font=info_font
             ),
-            700,
+            cur_y,
         ),
         font=info_font,
         stroke_width=2,
         text="Avg message length: {:.1f}".format(avgl2),
     )
 
+    cur_y += int(1.5 * y_offset)
     # draw most used emojis and words (2 rows)
     pdraw.text(
-        (1280 - pdraw.textlength(text="Most used emoji", font=subtitle_font) / 2, 900),
+        (
+            width / 2
+            - pdraw.textlength(text="Most used emoji", font=subtitle_font) / 2,
+            cur_y,
+        ),
         font=subtitle_font,
         text="Most used emoji",
         stroke_width=2,
     )
 
+    u1_mce = Image.open(f"output/{user1}_mc_emoji.png")
+    u1_mce.thumbnail(scaled_res, Image.ANTIALIAS)
+    u2_mce = Image.open(f"output/{user2}_mc_emoji.png")
+    u2_mce.thumbnail(scaled_res, Image.ANTIALIAS)
+
+    cur_y += y_offset
+
+    poster.paste(u1_mce, (img_offs_left, cur_y))
+    poster.paste(u2_mce, (img_offs_right, cur_y))
+
+    cur_y += y_scale + y_offset
+
     pdraw.text(
-        (1280 - pdraw.textlength(text="Most used words", font=subtitle_font) / 2, 1850),
+        (
+            width / 2
+            - pdraw.textlength(text="Most used words", font=subtitle_font) / 2,
+            cur_y,
+        ),
         font=subtitle_font,
         text="Most used words",
         stroke_width=2,
     )
 
-    u1_mce = Image.open(f"output/{user1}_mc_emoji.png")
-    u1_mce.thumbnail((1000, 750), Image.ANTIALIAS)
-    u2_mce = Image.open(f"output/{user2}_mc_emoji.png")
-    u2_mce.thumbnail((1000, 750), Image.ANTIALIAS)
-
-    poster.paste(u1_mce, (280, 1000))
-    poster.paste(u2_mce, (1420, 1000))
+    cur_y += y_offset
 
     u1_mcw = Image.open(f"output/{user1}_mc_words.png")
-    u1_mcw.thumbnail((1000, 750), Image.ANTIALIAS)
+    u1_mcw.thumbnail(scaled_res, Image.ANTIALIAS)
     u2_mcw = Image.open(f"output/{user2}_mc_words.png")
-    u2_mcw.thumbnail((1000, 750), Image.ANTIALIAS)
+    u2_mcw.thumbnail(scaled_res, Image.ANTIALIAS)
 
-    poster.paste(u1_mcw, (280, 1950))
-    poster.paste(u2_mcw, (1420, 1950))
+    poster.paste(u1_mcw, (img_offs_left, cur_y))
+    poster.paste(u2_mcw, (img_offs_right, cur_y))
 
+    cur_y += y_scale + y_offset
     # draw messages over time and per hour (1 row)
     pdraw.text(
-        (400, 2800),
+        (side_padding, cur_y),
         font=subtitle_font,
         text="Messages over time",
         stroke_width=2,
     )
 
     pdraw.text(
-        (2160 - pdraw.textlength(text="Messages per hour", font=subtitle_font), 2800),
+        (
+            width
+            - side_padding
+            - pdraw.textlength(text="Messages per hour", font=subtitle_font),
+            cur_y,
+        ),
         font=subtitle_font,
         text="Messages per hour",
         stroke_width=2,
     )
 
-    mot = Image.open(f"output/mess_per_date_total.png")
-    mot.thumbnail((1000, 750), Image.ANTIALIAS)
-    mph = Image.open(f"output/messages_hour.png")
-    mph.thumbnail((1000, 750), Image.ANTIALIAS)
+    cur_y += y_offset
 
-    poster.paste(mot, (280, 2900))
-    poster.paste(mph, (1420, 2900))
+    mot = Image.open(f"output/mess_per_date_total.png")
+    mot.thumbnail(scaled_res, Image.ANTIALIAS)
+    mph = Image.open(f"output/messages_hour.png")
+    mph.thumbnail(scaled_res, Image.ANTIALIAS)
+
+    poster.paste(mot, (img_offs_left, cur_y))
+    poster.paste(mph, (img_offs_right, cur_y))
+
+    cur_y += y_scale + y_offset
 
     # draw messages per weekday and month (1 row)
     pdraw.text(
-        (400, 3750),
+        (side_padding, cur_y),
         font=subtitle_font,
         text="Messages per weekday",
         stroke_width=2,
     )
 
     pdraw.text(
-        (2160 - pdraw.textlength(text="Messages per month", font=subtitle_font), 3750),
+        (
+            width
+            - side_padding
+            - pdraw.textlength(text="Messages per month", font=subtitle_font),
+            cur_y,
+        ),
         font=subtitle_font,
         text="Messages per month",
         stroke_width=2,
     )
 
-    mpw = Image.open(f"output/messages_weekday.png")
-    mpw.thumbnail((1000, 750), Image.ANTIALIAS)
-    mpm = Image.open(f"output/messages_month.png")
-    mpm.thumbnail((1000, 750), Image.ANTIALIAS)
+    cur_y += y_offset
 
-    poster.paste(mpw, (280, 3850))
-    poster.paste(mpm, (1420, 3850))
+    mpw = Image.open(f"output/messages_weekday.png")
+    mpw.thumbnail(scaled_res, Image.ANTIALIAS)
+    mpm = Image.open(f"output/messages_month.png")
+    mpm.thumbnail(scaled_res, Image.ANTIALIAS)
+
+    poster.paste(mpw, (img_offs_left, cur_y))
+    poster.paste(mpm, (img_offs_right, cur_y))
+
+    cur_y += y_scale + y_offset
 
     # draw percentage of texts and first message percentage (1 row)
     pdraw.text(
-        (400, 4700),
+        (side_padding, cur_y),
         font=subtitle_font,
         text="Percentage of texts",
         stroke_width=2,
     )
 
     pdraw.text(
-        (2160 - pdraw.textlength(text="Who writes first", font=subtitle_font), 4700),
+        (
+            width
+            - side_padding
+            - pdraw.textlength(text="Who writes first", font=subtitle_font),
+            cur_y,
+        ),
         font=subtitle_font,
         text="Who writes first",
         stroke_width=2,
     )
 
     fmp = Image.open(f"output/fm_pie_chart.png")
-    fmp.thumbnail((1000, 750), Image.ANTIALIAS)
+    fmp.thumbnail(scaled_res, Image.ANTIALIAS)
     mpu = Image.open(f"output/mpu_pie_chart.png")
-    mpu.thumbnail((1000, 750), Image.ANTIALIAS)
+    mpu.thumbnail(scaled_res, Image.ANTIALIAS)
 
-    poster.paste(mpu, (280, 4800))
-    poster.paste(fmp, (1420, 4800))
+    cur_y += y_offset
+    poster.paste(mpu, (img_offs_left, cur_y))
+    poster.paste(fmp, (img_offs_right, cur_y))
 
     poster.save("output/poster_" + user1 + "_" + user2 + ".pdf", quality=100)
 
