@@ -7,7 +7,7 @@ This python script analyses interactions between users from a given Whatsapp cha
 First, install the necessary packages with pip (preferrably in a venv):
 
 ```
-$ pip -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 If you are on MacOS, you will need to install a different backend for matplotlib to render emojis. This [blog post](https://towardsdatascience.com/how-i-got-matplotlib-to-plot-apple-color-emojis-c983767b39e0) describes how to install mplcairo on your system.
