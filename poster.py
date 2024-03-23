@@ -6,18 +6,23 @@ title_font = ImageFont.truetype("fonts/helvetica.ttf", size=200)
 subtitle_font = ImageFont.truetype("fonts/helvetica.ttf", size=80)
 info_font = ImageFont.truetype("fonts/helvetica.ttf", size=50)
 
+
+# resolution of poster
 width = 2560
 height = 5760
 
+# text padding on sides
 side_padding = 400
 
+# scaled resolution of plots
 x_scale = 1000
 y_scale = 750
-
 scaled_res = (x_scale, y_scale)
 
+# distance between titles / plots
 y_offset = 100
 
+# x axis offsets of plots
 img_offs_left = (width - 2 * x_scale) // 2
 img_offs_right = int(1.5 * img_offs_left) + x_scale
 
@@ -31,216 +36,78 @@ def create_poster(user1, user2, u1_messages, u2_messages):
     cur_y = 250
 
     # draw name title
-    pdraw.text(
-        (side_padding, cur_y),
-        font=title_font,
-        fill="#8dd3c7",
-        text=user1,
-        stroke_width=4,
-    )
-    pdraw.text(
-        (
-            width
-            - side_padding
-            - pdraw.textlength(
-                text=user2,
-                font=title_font,
-            ),
-            cur_y,
-        ),
-        font=title_font,
-        fill="#f59356",
-        text=user2,
-        stroke_width=4,
-    )
+    cur_y = draw_title(pdraw, user1, user2, cur_y)
 
-    cur_y += 3 * y_offset
     # draw total messages information
     mpu1 = len(u1_messages)
     mpu2 = len(u2_messages)
 
-    pdraw.text(
-        (side_padding, cur_y),
-        font=info_font,
-        stroke_width=2,
-        text=f"Total messages: {mpu1}",
-    )
-    pdraw.text(
-        (
-            width
-            - side_padding
-            - pdraw.textlength(text=f"Total messages: {mpu2}", font=info_font),
-            cur_y,
-        ),
-        font=info_font,
-        stroke_width=2,
-        text=f"Total messages: {mpu2}",
+    cur_y = draw_2_texts(
+        pdraw, f"Total messages: {mpu1}", f"Total messages: {mpu2}", cur_y
     )
 
-    cur_y += int(1.5 * y_offset)
     # draw average message length information
     avgl1 = avg_message_wc(u1_messages)
     avgl2 = avg_message_wc(u2_messages)
 
-    pdraw.text(
-        (side_padding, cur_y),
-        font=info_font,
-        stroke_width=2,
-        text="Avg message length: {:.1f}".format(avgl1),
-    )
-    pdraw.text(
-        (
-            width
-            - side_padding
-            - pdraw.textlength(
-                text="Avg message length: {:.1f}".format(avgl2), font=info_font
-            ),
-            cur_y,
-        ),
-        font=info_font,
-        stroke_width=2,
-        text="Avg message length: {:.1f}".format(avgl2),
+    cur_y = draw_2_texts(
+        pdraw,
+        "Avg message length: {:.1f}".format(avgl1),
+        "Avg message length: {:.1f}".format(avgl2),
+        cur_y,
     )
 
-    cur_y += int(1.5 * y_offset)
     # draw most used emojis and words (2 rows)
-    pdraw.text(
-        (
-            width / 2
-            - pdraw.textlength(text="Most used emoji", font=subtitle_font) / 2,
-            cur_y,
-        ),
-        font=subtitle_font,
-        text="Most used emoji",
-        stroke_width=2,
+    cur_y = draw_2_figs_1_title(
+        poster,
+        pdraw,
+        "Most used emoji",
+        f"output/{user1}_mc_emoji.png",
+        f"output/{user2}_mc_emoji.png",
+        cur_y,
     )
 
-    u1_mce = Image.open(f"output/{user1}_mc_emoji.png")
-    u1_mce.thumbnail(scaled_res, Image.ANTIALIAS)
-    u2_mce = Image.open(f"output/{user2}_mc_emoji.png")
-    u2_mce.thumbnail(scaled_res, Image.ANTIALIAS)
-
-    cur_y += y_offset
-
-    poster.paste(u1_mce, (img_offs_left, cur_y))
-    poster.paste(u2_mce, (img_offs_right, cur_y))
-
-    cur_y += y_scale + y_offset
-
-    pdraw.text(
-        (
-            width / 2
-            - pdraw.textlength(text="Most used words", font=subtitle_font) / 2,
-            cur_y,
-        ),
-        font=subtitle_font,
-        text="Most used words",
-        stroke_width=2,
+    cur_y = draw_2_figs_1_title(
+        poster,
+        pdraw,
+        "Most used words",
+        f"output/{user1}_mc_words.png",
+        f"output/{user2}_mc_words.png",
+        cur_y,
     )
 
-    cur_y += y_offset
-
-    u1_mcw = Image.open(f"output/{user1}_mc_words.png")
-    u1_mcw.thumbnail(scaled_res, Image.ANTIALIAS)
-    u2_mcw = Image.open(f"output/{user2}_mc_words.png")
-    u2_mcw.thumbnail(scaled_res, Image.ANTIALIAS)
-
-    poster.paste(u1_mcw, (img_offs_left, cur_y))
-    poster.paste(u2_mcw, (img_offs_right, cur_y))
-
-    cur_y += y_scale + y_offset
     # draw messages over time and per hour (1 row)
-    pdraw.text(
-        (side_padding, cur_y),
-        font=subtitle_font,
-        text="Messages over time",
-        stroke_width=2,
+    cur_y = draw_2_figs_2_titles(
+        poster,
+        pdraw,
+        "Messages over time",
+        "Messages per hour",
+        "output/mess_per_date_total.png",
+        "output/messages_hour.png",
+        cur_y,
     )
-
-    pdraw.text(
-        (
-            width
-            - side_padding
-            - pdraw.textlength(text="Messages per hour", font=subtitle_font),
-            cur_y,
-        ),
-        font=subtitle_font,
-        text="Messages per hour",
-        stroke_width=2,
-    )
-
-    cur_y += y_offset
-
-    mot = Image.open(f"output/mess_per_date_total.png")
-    mot.thumbnail(scaled_res, Image.ANTIALIAS)
-    mph = Image.open(f"output/messages_hour.png")
-    mph.thumbnail(scaled_res, Image.ANTIALIAS)
-
-    poster.paste(mot, (img_offs_left, cur_y))
-    poster.paste(mph, (img_offs_right, cur_y))
-
-    cur_y += y_scale + y_offset
 
     # draw messages per weekday and month (1 row)
-    pdraw.text(
-        (side_padding, cur_y),
-        font=subtitle_font,
-        text="Messages per weekday",
-        stroke_width=2,
+    cur_y = draw_2_figs_2_titles(
+        poster,
+        pdraw,
+        "Messages per weekday",
+        "Messages per month",
+        "output/messages_weekday.png",
+        "output/messages_month.png",
+        cur_y,
     )
-
-    pdraw.text(
-        (
-            width
-            - side_padding
-            - pdraw.textlength(text="Messages per month", font=subtitle_font),
-            cur_y,
-        ),
-        font=subtitle_font,
-        text="Messages per month",
-        stroke_width=2,
-    )
-
-    cur_y += y_offset
-
-    mpw = Image.open(f"output/messages_weekday.png")
-    mpw.thumbnail(scaled_res, Image.ANTIALIAS)
-    mpm = Image.open(f"output/messages_month.png")
-    mpm.thumbnail(scaled_res, Image.ANTIALIAS)
-
-    poster.paste(mpw, (img_offs_left, cur_y))
-    poster.paste(mpm, (img_offs_right, cur_y))
-
-    cur_y += y_scale + y_offset
 
     # draw percentage of texts and first message percentage (1 row)
-    pdraw.text(
-        (side_padding, cur_y),
-        font=subtitle_font,
-        text="Percentage of texts",
-        stroke_width=2,
+    cur_y = draw_2_figs_2_titles(
+        poster,
+        pdraw,
+        "Percentage of texts",
+        "Who writes first",
+        "output/fm_pie_chart.png",
+        "output/mpu_pie_chart.png",
+        cur_y,
     )
-
-    pdraw.text(
-        (
-            width
-            - side_padding
-            - pdraw.textlength(text="Who writes first", font=subtitle_font),
-            cur_y,
-        ),
-        font=subtitle_font,
-        text="Who writes first",
-        stroke_width=2,
-    )
-
-    fmp = Image.open(f"output/fm_pie_chart.png")
-    fmp.thumbnail(scaled_res, Image.ANTIALIAS)
-    mpu = Image.open(f"output/mpu_pie_chart.png")
-    mpu.thumbnail(scaled_res, Image.ANTIALIAS)
-
-    cur_y += y_offset
-    poster.paste(mpu, (img_offs_left, cur_y))
-    poster.paste(fmp, (img_offs_right, cur_y))
 
     poster.save("output/poster_" + user1 + "_" + user2 + ".pdf", quality=100)
 
@@ -289,3 +156,112 @@ def prepare_figs(user1, user2, u1_messages, u2_messages):
     u1_hourcount = messages_per_hour(u1_messages)
     u2_hourcount = messages_per_hour(u2_messages)
     plot_messages_hour(user1, user2, u1_hourcount, u2_hourcount)
+
+
+def draw_2_figs_1_title(poster, pdraw, title, fig1_path, fig2_path, cur_y):
+    pdraw.text(
+        (
+            width / 2 - pdraw.textlength(text=title, font=subtitle_font) / 2,
+            cur_y,
+        ),
+        font=subtitle_font,
+        text=title,
+        stroke_width=2,
+    )
+
+    fig1 = Image.open(fig1_path)
+    fig1.thumbnail(scaled_res, Image.ANTIALIAS)
+    fig2 = Image.open(fig2_path)
+    fig2.thumbnail(scaled_res, Image.ANTIALIAS)
+
+    cur_y += y_offset
+
+    poster.paste(fig1, (img_offs_left, cur_y))
+    poster.paste(fig2, (img_offs_right, cur_y))
+
+    cur_y += y_scale + y_offset
+
+    return cur_y
+
+
+def draw_2_figs_2_titles(poster, pdraw, title1, title2, fig1_path, fig2_path, cur_y):
+    pdraw.text(
+        (side_padding, cur_y),
+        font=subtitle_font,
+        text=title1,
+        stroke_width=2,
+    )
+
+    pdraw.text(
+        (
+            text_offset_right(pdraw, title2, subtitle_font),
+            cur_y,
+        ),
+        font=subtitle_font,
+        text=title2,
+        stroke_width=2,
+    )
+
+    cur_y += y_offset
+
+    fig1 = Image.open(fig1_path)
+    fig1.thumbnail(scaled_res, Image.ANTIALIAS)
+    fig2 = Image.open(fig2_path)
+    fig2.thumbnail(scaled_res, Image.ANTIALIAS)
+
+    poster.paste(fig1, (img_offs_left, cur_y))
+    poster.paste(fig2, (img_offs_right, cur_y))
+
+    cur_y += y_scale + y_offset
+
+    return cur_y
+
+
+def draw_2_texts(pdraw, text1, text2, cur_y):
+    pdraw.text(
+        (side_padding, cur_y),
+        font=info_font,
+        stroke_width=2,
+        text=text1,
+    )
+    pdraw.text(
+        (
+            text_offset_right(pdraw, text2, info_font),
+            cur_y,
+        ),
+        font=info_font,
+        stroke_width=2,
+        text=text2,
+    )
+
+    cur_y += int(1.5 * y_offset)
+
+    return cur_y
+
+
+def draw_title(pdraw, name1, name2, cur_y):
+    pdraw.text(
+        (side_padding, cur_y),
+        font=title_font,
+        fill="#8dd3c7",
+        text=name1,
+        stroke_width=4,
+    )
+    pdraw.text(
+        (
+            text_offset_right(pdraw, name2, title_font),
+            cur_y,
+        ),
+        font=title_font,
+        fill="#f59356",
+        text=name2,
+        stroke_width=4,
+    )
+
+    cur_y += 3 * y_offset
+
+    return cur_y
+
+
+def text_offset_right(pdraw, text, font):
+    return width - side_padding - pdraw.textlength(text=text, font=font)
