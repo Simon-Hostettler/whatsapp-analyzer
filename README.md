@@ -23,3 +23,9 @@ How to export a Whatsapp chat history:
 This results in a zip file, which you can then extract, and paste the chats.txt into the `chat_logs` folder in the current directory. In the `main.py` file, simply change the string in `load_file("chat.txt")` to the name of your text file.
 
 After running `main.py`, the results should be stored in `output/poster_$user1_$user2.pdf`
+
+# Example
+
+Example generated poster (Obviously redacted):
+
+![Example Poster](examples/example_poster.pdf)
