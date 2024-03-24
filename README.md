@@ -28,4 +28,4 @@ After running `main.py`, the results should be stored in `output/poster_$user1_$
 
 Example generated poster (Obviously redacted):
 
-![Example Poster](examples/example_poster.pdf)
+<img src="examples/example_poster.png" width="750">
