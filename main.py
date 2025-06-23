@@ -1,14 +1,13 @@
 import matplotlib, mplcairo
 import matplotlib.pyplot as plt
 import seaborn as sns
-from loading import *
-from poster import *
-from plt_stylesheet import stylesheet
+from src.loading import *
+from src.poster import *
+from src.plt_stylesheet import stylesheet
 from platform import system
 
 
-if __name__ == "__main__":
-
+def main():
     # change backend to render emojis correctly
     if system().lower() == "darwin":
         matplotlib.use("module://mplcairo.macosx")
@@ -17,8 +16,10 @@ if __name__ == "__main__":
 
     create_folders_if_missing()
 
-    # load chat
-    chat = load_file("chat.txt")
-    user1, user2, u1_messages, u2_messages = split_user_messages(chat)
+    user1, user2, data = parse_chat_to_dataframe("xxx")
 
-    create_poster(user1, user2, u1_messages, u2_messages)
+    create_poster(user1, user2, data)
+
+
+if __name__ == "__main__":
+    main()

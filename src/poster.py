@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
-from plotting import *
-from text_analysis import *
+from src.plotting import *
+from src.text_analysis import *
 
 title_font = ImageFont.truetype("fonts/helvetica.ttf", size=200)
 subtitle_font = ImageFont.truetype("fonts/helvetica.ttf", size=80)
@@ -27,8 +27,11 @@ img_offs_left = (width - 2 * x_scale) // 2
 img_offs_right = int(1.5 * img_offs_left) + x_scale
 
 
-def create_poster(user1, user2, u1_messages, u2_messages):
-    prepare_figs(user1, user2, u1_messages, u2_messages)
+def create_poster(user1, user2, df):
+    prepare_figs(user1, user2, df)
+
+    u1_messages = df[df["username"] == user1]
+    u2_messages = df[df["username"] == user2]
 
     poster = Image.new("RGB", (width, height), color="#2e2e36")
     pdraw = ImageDraw.Draw(poster)
@@ -112,7 +115,9 @@ def create_poster(user1, user2, u1_messages, u2_messages):
     poster.save("output/poster_" + user1 + "_" + user2 + ".pdf", quality=100)
 
 
-def prepare_figs(user1, user2, u1_messages, u2_messages):
+def prepare_figs(user1, user2, df):
+    u1_messages = df[df["username"] == user1].copy()
+    u2_messages = df[df["username"] == user2].copy()
     # plot most used emojis
     u1_emojicount = most_common_emojis(u1_messages, 10)
     u2_emojicount = most_common_emojis(u2_messages, 10)
@@ -144,12 +149,10 @@ def prepare_figs(user1, user2, u1_messages, u2_messages):
     # plot messages per month
     u1_monthcount = messages_per_month(u1_messages)
     u2_monthcount = messages_per_month(u2_messages)
-    print(u1_monthcount)
     plot_messages_month(user1, user2, u1_monthcount, u2_monthcount)
 
     # plot pie chart of percentage of who sent first message
-    count_dict = first_message_per_day(u1_messages, u2_messages)
-    print(count_dict)
+    count_dict = first_message_per_day(df)
     plot_first_message_percentage(count_dict)
 
     # plot messages per hour

@@ -31,6 +31,7 @@ def plot_messages_date_total(user1, user2, u1_datedict, u2_datedict):
 
     merged_dict = dict(Counter(u1_datedict) + Counter(u2_datedict))
     dict_sorted = sorted(merged_dict.items())
+    dict_sorted_count = sorted(merged_dict.items(), key=lambda item: item[1])
     dates, counter = zip(*dict_sorted)
 
     plt.plot(dates, counter)
